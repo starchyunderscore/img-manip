@@ -4,8 +4,7 @@ Simple TUI image manipulator written in python
 
 Current state:
 
-I do not know how to make a terminal application. I am trying to learn.
-
+I think I know how to do all the needed user input, however I still need to figure out image manipulation and display
 
 The plan:
 
