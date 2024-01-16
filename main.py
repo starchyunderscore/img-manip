@@ -34,6 +34,11 @@ except:
 - f12: quit (save/discard)
 '''
 
+pil_image_extensions = Image.registered_extensions()
+pil_supported_images = {ex for ex, f in pil_image_extensions.items() if f in Image.SAVE}
+
+working_directory = os.getcwd()
+
 placeholder_no_image_selected = "No image selected"
 
 topbar_fkeys = "f1\tf2\tf3\tf4\tf5\tf6\tf7\tf8\tf9\tf10\tf11\tf12\n"
@@ -80,7 +85,17 @@ def main(win):
                     try:
                         win.clear()
                         curses.echo()
+                        
+                        directory_contents_display = []
+                        directory_contents = os.listdir(working_directory)
+                        for item in directory_contents:
+                            if any(x in item.lower() for x in pil_supported_images):
+                                directory_contents_display += item
+                        
                         win.addstr("Input Filename: ")
+                        
+                        win.addstr("\n" + "".join(directory_contents_display))
+                            
                         tmp_img_path = str(win.getstr(0, 16, 100)).strip().replace("\n", "")[2:-1]
                         if tmp_img_path == "":
                             pass
