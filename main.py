@@ -4,13 +4,18 @@ import sys
 from PIL import Image
 
 # Try to get image path as given as command argument
+
 try:
+    global img_path
+    global im
+    global imc
     img_path = str(sys.argv[1])
     im = Image.open(img_path) # Original image, remains unchanged
     imc = Image.open(img_path) # Copy of image, where changes are applied
-except Exception as ex:
-    print(ex)
-    pass
+except:
+    img_path = 0 # Defaults to ignore
+    im = 0
+    imc = 0
 
 '''
 - f1: invert
@@ -32,11 +37,9 @@ except Exception as ex:
 placeholder_no_image_selected = "No image selected"
 
 topbar_fkeys = "f1\tf2\tf3\tf4\tf5\tf6\tf7\tf8\tf9\tf10\tf11\tf12\n"
-topbar_uses  = "f1\tf2\tf3\tf4\tf5\tf6\tf7\tf8\tf9\tf10\tf11\texit\n"
+topbar_uses  = "f1\tf2\tf3\tf4\tf5\tf6\tf7\tf8\topen\tf10\tf11\texit\n"
 
-def main(win):
-    win.nodelay(False)
-    key=""
+def scupdate(win, im, imc): # Display the top bars and the images
     win.clear()
     win.addstr(topbar_fkeys)
     win.addstr(topbar_uses)
@@ -44,16 +47,18 @@ def main(win):
         win.addstr(img_path)
     except:
         win.addstr(placeholder_no_image_selected)
+
+def main(win):
+    global im
+    global imc
+    global img_path
+    win.nodelay(False)
+    key=""
+    scupdate(win, im, imc)
     while 1:
         try:
             key = win.getkey()
-            win.clear()
-            win.addstr(topbar_fkeys)
-            win.addstr(topbar_uses)
-            try:
-                win.addstr(img_path)
-            except:
-                win.addstr(placeholder_no_image_selected)
+            scupdate(win, im, imc)
             match key:
                 case "KEY_F(1)": # 
                     pass
@@ -72,15 +77,23 @@ def main(win):
                 case "KEY_F(8)": # 
                     pass
                 case "KEY_F(9)": # Open new image
-                    win.clear()
-                    win.addstr("Input Filename: ")
-                    img_path = strip(win.getstr())
-                    im = Image.open(img_path)
-                    imc = Image.open(img_path)
-                    if img_path == "":
-                        pass
-                    else:
-                        pass # Will be replaced with asking the user if they wish to discard the old image
+                    try:
+                        win.clear()
+                        curses.echo()
+                        win.addstr("Input Filename: ")
+                        tmp_img_path = str(win.getstr(0, 16, 100)).strip().replace("\n", "")[2:-1]
+                        if tmp_img_path == "":
+                            pass
+                        else: # Will add asking the user if they wish to discard the old image
+                            tmp_im = Image.open(tmp_img_path)
+                            tmp_imc = Image.open(tmp_img_path) 
+                            # Remove from temporary only after chance of error has passed, otherwise it may update incorrectly
+                            img_path = tmp_img_path
+                            im = tmp_im
+                            imc = tmp_imc
+                        scupdate(win, im, imc)
+                    except Exception as e:
+                        print(e)
                 case "KEY_F(10)": # 
                     pass
                 case "KEY_F(11)": # 
@@ -90,6 +103,5 @@ def main(win):
         except Exception as e:
             # No input
             pass
-            
-print(img_path)
+
 curses.wrapper(main)
