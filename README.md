@@ -1,6 +1,11 @@
 # img-manip
 Simple TUI image manipulator written in python
 
+To use:
+
+1. Download main.py & all dependencies, run with python3
+2. Use package made with pyinstaller (not ready yet)
+
 
 Current state:
 
