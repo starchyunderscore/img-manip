@@ -85,19 +85,21 @@ def main(win):
                     try:
                         win.clear()
                         curses.echo()
-                        
+                        # Get list of contents in directory that match the criteria of including a supported file extension somwhere in the name.
+                        # This may show unsupported files in the case that the name contains a supported extension, but the actual file extension is different (ex: hello.png.txt)
                         directory_contents_display = []
                         directory_contents = os.listdir(working_directory)
                         for item in directory_contents:
                             if any(x in item.lower() for x in pil_supported_images):
-                                directory_contents_display += item
+                                directory_contents_display += item + "\t"
                         
                         win.addstr("Input Filename: ")
                         
-                        win.addstr("\n" + "".join(directory_contents_display))
+                        win.addstr("\n\n" + "".join(directory_contents_display))
                             
-                        tmp_img_path = str(win.getstr(0, 16, 100)).strip().replace("\n", "")[2:-1]
-                        if tmp_img_path == "":
+                        tmp_img_path = str(win.getstr(0, 16, 100)).strip().replace("\n", "")[2:-1] # Get user input and remove artifacts
+                        
+                        if tmp_img_path == "": # If user does not input a filename, skip everything
                             pass
                         else: # Will add asking the user if they wish to discard the old image
                             tmp_im = Image.open(tmp_img_path)
