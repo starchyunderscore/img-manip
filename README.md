@@ -2,6 +2,10 @@
 Simple TUI image manipulator written in python
 
 
+Current state:
+
+I do not know how to make a terminal application. I am trying to learn.
+
 
 The plan:
 
@@ -15,11 +19,11 @@ On the bottom of the screen, some options:
 - f4: rotate clockwise
 
 - f5: crop
-- f6: open new image
+- f6: hue adjust
 - f10: save (overwrite)
 - f8: save (copy)
 
-- f9: quit (discards)
-- f10: 
-- f11: fullscreen the original image
-- f12: fullscreen the edit preview
+- f9: open new image (save/discard)
+- f10: fullscreen the original image
+- f11: fullscreen the edit preview
+- f12: quit (save/discard)
